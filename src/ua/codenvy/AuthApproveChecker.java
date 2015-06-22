@@ -25,9 +25,9 @@ public class AuthApproveChecker {
     private JPasswordField userPasswordField = new JPasswordField(15);
     private JLabel         userLabel         = new JLabel("Enter user name:");
     private JLabel         passwordLabel     = new JLabel("Enter your password");
-    private JButton btnLogin;
+    private JButton btnLogin = new JButton("Login");
     private JButton btnCancel;
-    private JPanel panel = new JPanel(new BorderLayout());
+    private JPanel panel = new JPanel(new GridBagLayout());
 
     public void createForm() {
         JFrame frame = new JFrame("JDialog Demo");
@@ -36,9 +36,33 @@ public class AuthApproveChecker {
         panel.setBackground(Color.LIGHT_GRAY);
         panel.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createEtchedBorder(), "Login Panel"));
-        panel.add(userLabel, BorderLayout.NORTH);
-        userNameField.setSize(20, 30);
-        panel.add(userNameField, BorderLayout.WEST);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.insets = new Insets(10, 10, 10, 10);
+
+        // add components to the panel
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        panel.add(userLabel, constraints);
+
+        constraints.gridx = 1;
+        panel.add(userNameField, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        panel.add(passwordLabel, constraints);
+
+        constraints.gridx = 1;
+        panel.add(userPasswordField, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.CENTER;
+        panel.add(btnLogin, constraints);
+
+
         frame.add(panel);
         frame.setSize(400, 200);
         frame.setVisible(true);
