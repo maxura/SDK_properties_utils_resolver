@@ -14,6 +14,8 @@ package ua.codenvy;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * //
@@ -25,7 +27,7 @@ public class AuthApproveChecker {
     private JPasswordField userPasswordField = new JPasswordField(15);
     private JLabel         userLabel         = new JLabel("Enter user name:");
     private JLabel         passwordLabel     = new JLabel("Enter your password");
-    private JButton btnLogin = new JButton("Login");
+    private JButton        btnLogin          = new JButton("Login");
     private JButton btnCancel;
     private JPanel panel = new JPanel(new GridBagLayout());
 
@@ -61,14 +63,33 @@ public class AuthApproveChecker {
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(btnLogin, constraints);
-
-
+        btnLogin.addActionListener(new PerformButton());
         frame.add(panel);
-        frame.setSize(400, 200);
+        frame.setSize(400, 500);
         frame.setVisible(true);
     }
 
+
+    private class PerformButton implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<:");
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.anchor = GridBagConstraints.WEST;
+            constraints.insets = new Insets(1, 1, 1, 1);
+            constraints.gridx = 0;
+            constraints.gridy = 3;
+            constraints.gridwidth = 2;
+            JButton newBtn = new JButton("gigi");
+            panel.add(newBtn,constraints);
+
+        }
+    }
+
+
     public String getText() {
         return userNameField.getText();
+
     }
 }
