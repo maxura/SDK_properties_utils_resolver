@@ -29,7 +29,10 @@ public class AuthApproveChecker {
     private JLabel         passwordLabel     = new JLabel("Enter your password");
     private JButton        btnLogin          = new JButton("Login");
     private JButton btnCancel;
+    private JTextArea        textArea          = new JTextArea(5, 30);
     private JPanel panel = new JPanel(new GridBagLayout());
+
+
 
     public void createForm() {
         JFrame frame = new JFrame("JDialog Demo");
@@ -64,9 +67,20 @@ public class AuthApproveChecker {
         constraints.anchor = GridBagConstraints.CENTER;
         panel.add(btnLogin, constraints);
         btnLogin.addActionListener(new PerformButton());
+
+
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        constraints.gridwidth = 2;
+        constraints.anchor = GridBagConstraints.WEST;
+        textArea.setMargin(new Insets(5,5,5,5));
+        textArea.setEditable(false);
+        panel.add(textArea, constraints);
+
         frame.add(panel);
         frame.setSize(400, 500);
         frame.setVisible(true);
+
     }
 
 
@@ -74,17 +88,9 @@ public class AuthApproveChecker {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<:");
-            GridBagConstraints constraints = new GridBagConstraints();
-            constraints.anchor = GridBagConstraints.WEST;
-            constraints.insets = new Insets(1, 1, 1, 1);
-            constraints.gridx = 0;
-            constraints.gridy = 3;
-            constraints.gridwidth = 2;
-            JButton newBtn = new JButton("gigi");
-            panel.add(newBtn,constraints);
-
-        }
+        LoginChecker lgnCheck = new LoginChecker();
+        lgnCheck.getSession(userNameField.getText(), userPasswordField.getPassword().toString(),textArea);
+       }
     }
 
 

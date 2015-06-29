@@ -13,6 +13,8 @@
 package ua.codenvy;
 
 import javax.net.ssl.HttpsURLConnection;
+import javax.swing.*;
+import java.awt.*;
 import java.io.OutputStream;
 import java.net.URL;
 
@@ -22,7 +24,9 @@ import java.net.URL;
  * @author Musienko Maxim
  */
 public class LoginChecker {
-  public String getSession(String login, String password) {
+
+
+    public String getSession(String login, String password, JTextArea infopanel) {
       HttpsURLConnection connection = null;
       String sessionId ="";
       {
@@ -39,13 +43,16 @@ public class LoginChecker {
               OutputStream output = connection.getOutputStream();
               output.write(("os_username="+login+"&os_password="+password+"&login=Log+In&os_destination=").getBytes());
               System.out.println(connection.getResponseCode());
-//            if (connection.getResponseCode() != 200) {
-//                throw new RuntimeException(
-//                        new Exception("Can not stop application using REST API: " + "from workspace " + nameWs + "Name of the app.: " +
-//                                      nameApp + "Server response code: " +
-//                                      connection.getResponseCode()));
-//            }
+            if (connection.getResponseCode() != 200) {
+                throw new RuntimeException(
+                        new Exception("Can not stop application using REST API:" +
+                                      connection.getResponseCode()));
+            }
+
+              infopanel.setDisabledTextColor(Color.GREEN);
+              infopanel.append("User authorized succesful: " + connection.getResponseMessage() + " "+ connection.getResponseCode());
           } catch (Exception e) {
+             infopanel.append(e.getMessage());
               e.printStackTrace();
           } finally {
               if (connection != null) {
