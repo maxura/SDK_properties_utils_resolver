@@ -14,7 +14,6 @@ package ua.codenvy;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.*;
-import java.awt.*;
 import java.io.OutputStream;
 import java.net.URL;
 
@@ -27,49 +26,37 @@ public class LoginChecker {
 
 
     public String getSession(String login, String password, JTextArea infopanel) {
-      HttpsURLConnection connection = null;
-      String sessionId ="";
-      {
-          try {
-              String apiUrl = "https://wiki.codenvycorp.com/login.action";
-              URL url = new URL(apiUrl);
-              connection = (HttpsURLConnection)url.openConnection();
-              connection.setRequestMethod("POST");
-              connection.setAllowUserInteraction(false);
-              connection.setRequestProperty("Content-Type", "text/plain");
-              connection.setInstanceFollowRedirects(true);
-              connection.setDoOutput(true);
-              connection.setDoInput(true);
-              OutputStream output = connection.getOutputStream();
-              output.write(("os_username="+login+"&os_password="+password+"&login=Log+In&os_destination=").getBytes());
-              System.out.println(connection.getResponseCode());
-            if (connection.getResponseCode() != 200) {
-                throw new RuntimeException(
-                        new Exception("Can not stop application using REST API:" +
-                                      connection.getResponseCode()));
+        HttpsURLConnection connection = null;
+        StringBuilder responceData = new StringBuilder();
+        {
+            try {
+                String apiUrl = "https://wiki.codenvycorp.com/login.action";
+                URL url = new URL(apiUrl);
+                connection = (HttpsURLConnection)url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestProperty("Connection", "keep-alive");
+                connection.setAllowUserInteraction(false);
+                connection.setInstanceFollowRedirects(false);
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+                OutputStream output = connection.getOutputStream();
+                output.write(("os_username=" + login + "&os_password=" + password + "&login=Log+In&os_destination=").getBytes());
+                if (connection.getResponseCode() != 200 && connection.getResponseCode() != 302) {
+                    infopanel.append("Something went wrong after authorized on codenvy wiki page. " + connection.getErrorStream());
+                    throw new Exception("Something went wrong after authorized on codenvy wiki page. " + connection.getErrorStream());
+                }
+            } catch (Exception e) {
+                infopanel.append(e.getMessage());
+                e.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
             }
+        }
+        return connection.getHeaderFields().get("X-Seraph-LoginReason").toString();
+    }
 
-              infopanel.setDisabledTextColor(Color.GREEN);
-              infopanel.append("User authorized succesful: " + connection.getResponseMessage() + " "+ connection.getResponseCode());
-          } catch (Exception e) {
-             infopanel.append(e.getMessage());
-              e.printStackTrace();
-          } finally {
-              if (connection != null) {
-                  connection.disconnect();
-              }
-          }
-      }
-
-      for(String value :connection.getHeaderFields().get("Set-Cookie")){
-            sessionId = value;
-      }
-
-      return sessionId.split(";")[0];
-  }
-//
-//    public String getkeys(){
-//        https://wiki.codenvycorp.com/display/DPP/Installation
-//    }
 
 }

@@ -29,10 +29,9 @@ public class AuthApproveChecker {
     private JLabel         passwordLabel     = new JLabel("Enter your password");
     private JButton        btnLogin          = new JButton("Login");
     private JButton btnCancel;
-    private JTextArea        textArea          = new JTextArea(5, 30);
-    private JPanel panel = new JPanel(new GridBagLayout());
-
-
+    private JTextArea textArea = new JTextArea(5, 30);
+    private JPanel    panel    = new JPanel(new GridBagLayout());
+    JScrollPane scroll = new JScrollPane (textArea);
 
     public void createForm() {
         JFrame frame = new JFrame("JDialog Demo");
@@ -73,9 +72,9 @@ public class AuthApproveChecker {
         constraints.gridy = 3;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.WEST;
-        textArea.setMargin(new Insets(5,5,5,5));
+        textArea.setMargin(new Insets(5, 5, 5, 5));
         textArea.setEditable(false);
-        panel.add(textArea, constraints);
+        panel.add(scroll, constraints);
 
         frame.add(panel);
         frame.setSize(400, 500);
@@ -88,14 +87,16 @@ public class AuthApproveChecker {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-        LoginChecker lgnCheck = new LoginChecker();
-        lgnCheck.getSession(userNameField.getText(), userPasswordField.getPassword().toString(),textArea);
-       }
+            LoginChecker lgnCheck = new LoginChecker();
+            String responceInfo = lgnCheck.getSession(userNameField.getText(), String.valueOf(userPasswordField.getPassword()), textArea);
+            if (!responceInfo.equals("[OK]")) {
+                textArea.setForeground(Color.RED);
+                textArea.append(responceInfo + "\n");
+            } else {
+                textArea.setForeground(Color.GREEN);
+                textArea.append("authorization success");
+            }
+        }
     }
 
-
-    public String getText() {
-        return userNameField.getText();
-
-    }
 }
